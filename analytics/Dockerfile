@@ -1,22 +1,27 @@
-
-# Use Python Python 3.10 as the base image
-FROM public.ecr.aws/docker/library/python:3.10-alpine
+# Use Python 3.10 slim as the base image (slim is lighter than full but works better than alpine for psycopg2)
+FROM python:3.10-slim
 
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy the current directory contents to the container at /app
-COPY /analytics/ /app
+# Copy requirements first to leverage Docker cache
+COPY requirements.txt .
 
-# Install dependencies from requirements.txt
-RUN pip install --no-cache-dir -r /app/requirements.txt
+# Install system dependencies needed for psycopg2 and Python packages
+RUN apt-get update -y && \
+    apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev && \
+    pip install --no-cache-dir -r requirements.txt && \
+    apt-get remove -y build-essential && \
+    apt-get autoremove -y && \
+    rm -rf /var/lib/apt/lists/*
 
-# Expose port 5000
-EXPOSE 5000
+# Copy the application code
+COPY . .
 
-# Set an environment variable
-ENV NAME World
+# Expose port 5153 (the port used by app.py)
+EXPOSE 5153
 
 # Run the application when the container starts
-CMD ["python", "app/app.py"]
-CMD python app.py
+CMD ["python", "app.py"]

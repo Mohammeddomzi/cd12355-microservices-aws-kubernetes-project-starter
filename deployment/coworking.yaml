@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
       - name: coworking
-        image: <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/coworking:latest
+        image: 183302320810.dkr.ecr.us-east-1.amazonaws.com/coworking:latest
         imagePullPolicy: Always
         livenessProbe:
           httpGet:
