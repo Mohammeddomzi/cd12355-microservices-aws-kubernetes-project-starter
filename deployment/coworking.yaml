@@ -32,6 +32,13 @@ spec:
       - name: coworking
         image: 183302320810.dkr.ecr.us-east-1.amazonaws.com/coworking:latest
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
         livenessProbe:
           httpGet:
             path: /health_check

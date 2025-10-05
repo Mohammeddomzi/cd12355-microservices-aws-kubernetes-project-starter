@@ -17,6 +17,7 @@ phases:
       - docker build -t $REPOSITORY_URI:latest .
       - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
       - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$CODEBUILD_BUILD_NUMBER
+      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:1.0.$CODEBUILD_BUILD_NUMBER
 
   post_build:
     commands:
@@ -25,8 +26,9 @@ phases:
       - docker push $REPOSITORY_URI:latest
       - docker push $REPOSITORY_URI:$IMAGE_TAG
       - docker push $REPOSITORY_URI:$CODEBUILD_BUILD_NUMBER
+      - docker push $REPOSITORY_URI:1.0.$CODEBUILD_BUILD_NUMBER
       - echo Writing image definitions file...
-      - printf '[{"name":"%s","imageUri":"%s"}]' $IMAGE_REPO_NAME $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+      - printf '[{"name":"%s","imageUri":"%s"}]' $IMAGE_REPO_NAME $REPOSITORY_URI:1.0.$CODEBUILD_BUILD_NUMBER > imagedefinitions.json
 
 artifacts:
   files:
